@@ -10,6 +10,7 @@ class Ultrasonic(threading.Thread):
         self.gpio = gpio
         self.distance = 0
         self.run_flag = True
+        self.gpio.setmode(gpio.BCM)
         gpio.setup(self.trigPin, gpio.OUT, initial=gpio.LOW)
         gpio.setup(self.echoPin, gpio.IN)
         print('초음파 센서 설정됨, 트리거 : ', self.trigPin, ', 에코 : ', self.echoPin)
@@ -18,8 +19,9 @@ class Ultrasonic(threading.Thread):
         return self.distance
 
     def read_start(self):
+        stop = 0
+        start = 0
         while self.run_flag:
-            global start, stop
             self.gpio.output(self.trigPin, False)
             time.sleep(0.5)
 

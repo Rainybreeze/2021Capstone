@@ -8,6 +8,7 @@ import lidar
 import motor
 import ultrasonic
 import infrad
+import debugTest
 
 
 # functions
@@ -65,6 +66,7 @@ def sys_exit():
     ultrasonic_right.stop()
     ultrasonic_left.stop()
     infrad_sensor.stop()
+    GPIO.cleanup()
     print("종료합니다")
     sys.exit()
 
@@ -74,14 +76,21 @@ running_flag = True
 isDebug = False
 idle_time = 0
 
+len(sys.argv)
+for i in range(0, len(sys.argv)):
+    if sys.argv[i] == '-debug':
+        isDebug = True
+        print('debug mode')
+    if sys.argv[i] == '-setup-idle-time':
+        idle_time = int(sys.argv[i + 1])
+'''        
 for arg in sys.argv:
     if arg == '-debug':
         isDebug = True
         print('debug mode')
     if arg == '-setup-idle-time':
-        idle_time = 0
-
-
+        idle_time = sys.argv[arg_num]
+        '''
 
 if os.geteuid() != 0:
     exit("no root permission! plz run with 'sudo'.")
@@ -112,20 +121,26 @@ infrad_sensor = infrad.Infrad()
 infrad_sensor.start()
 
 try:
+    print(idle_time)
     if isDebug:
         while True:
             print('debug mode')
             time.sleep(1)
+
     is_left = False
+    print('none debug mode')
     # motor_ctl.vacc_motor_run()
     # motor_ctl.turn_left()
-    while running_flag:
-        motor_ctl.go_block()
-        # detect_falling()
-        is_left = detect_wall(is_left)
-        show_adc_data()
-        show_ultrasonic_data()
-
-    sys_exit()
+    while True:
+        while running_flag:
+            '''
+            motor_ctl.go_block()
+            # detect_falling()
+            is_left = detect_wall(is_left)
+            show_adc_data()
+            show_ultrasonic_data()
+            '''
+        while not running_flag:
+            time.sleep(500)
 except KeyboardInterrupt:
     sys_exit()
