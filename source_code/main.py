@@ -120,11 +120,18 @@ ultrasonic_right.start()
 infrad_sensor = infrad.Infrad()
 infrad_sensor.start()
 
+if isDebug:
+    leftUltrasonic_test = debugTest.UltrasonicTest(GPIO, ultrasonic_left, direction='left')
+    rightUltrasonic_test = debugTest.UltrasonicTest(GPIO, ultrasonic_right, direction='right')
+    infrad_test = debugTest.InfradTest(GPIO, infrad_sensor)
+
 try:
     print(idle_time)
     if isDebug:
         while True:
-            print('debug mode')
+            leftUltrasonic_test.get_data()
+            rightUltrasonic_test.get_data()
+            infrad_test.get_data()
             time.sleep(1)
 
     is_left = False
@@ -133,6 +140,8 @@ try:
     # motor_ctl.turn_left()
     while True:
         while running_flag:
+            show_adc_data()
+            time.sleep(1)
             '''
             motor_ctl.go_block()
             # detect_falling()
