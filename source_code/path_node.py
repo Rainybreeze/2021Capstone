@@ -2,10 +2,11 @@ class Node:
     def __init__(self, mother_node, recent_node):
         self.mother_node = mother_node
         self.self_node = recent_node + 1
-        self.isLeft = [None, 0]
-        self.isRight = [None, 0]
-        self.isFront = [None, 0]
-        self.isPassed = False
+        self.left_node = [None, 0]
+        self.front_node = [None, 0]
+        self.right_node = [None, 0]
+
+
 
     def pass_node(self):
         self.isPassed = True

@@ -8,7 +8,6 @@ import lidar
 import motor
 import ultrasonic
 import infrad
-import path_node
 
 
 # functions
@@ -29,9 +28,35 @@ def detect_falling():
     if ultrasonic_left.get_distance() >= 10 or ultrasonic_right.get_distance() >= 10:
         print("fallen")
         motor_ctl.stop()
-        motor_ctl.go_back()
-        time.sleep(1)
+        motor_ctl.go_block_back()
+
+
+def detect_wall(is_left):
+    if infrad_sensor.get_data(1, True) > 1.5:
         motor_ctl.stop()
+        time.sleep(0.5)
+        left = infrad_sensor.get_data(0, True)
+        right = infrad_sensor.get_data(2, True)
+        print('front wall available', left, right)
+        if left > 1.7:
+            is_left = False
+        if right > 1.7:
+            if not is_left:
+                motor_ctl.go_block_back()
+        if is_left:
+            print('turn left')
+            motor_ctl.turn_left()
+            motor_ctl.go_block()
+            motor_ctl.go_block()
+            motor_ctl.turn_left()
+            return False
+        else:
+            print('turn right')
+            motor_ctl.turn_right()
+            motor_ctl.go_block()
+            motor_ctl.go_block()
+            motor_ctl.turn_right()
+            return True
 
 
 def sys_exit():
@@ -81,14 +106,16 @@ infrad_sensor = infrad.Infrad()
 infrad_sensor.start()
 
 try:
-    motor_ctl.turn_left()
+    is_left = False
     # motor_ctl.vacc_motor_run()
-    # motor_ctl.go_ahead()
+    # motor_ctl.turn_left()
     while running_flag:
-        detect_falling()
-        # show_ultrasonic_data()
+        motor_ctl.go_block()
+        # detect_falling()
+        is_left = detect_wall(is_left)
         show_adc_data()
-        time.sleep(1)
+        show_ultrasonic_data()
+
     sys_exit()
 except KeyboardInterrupt:
     sys_exit()
