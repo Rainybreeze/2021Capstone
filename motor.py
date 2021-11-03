@@ -1,4 +1,3 @@
-import RPi.GPIO as gpio
 import time
 
 
@@ -12,12 +11,12 @@ class Motor:
         print('모터 설정됨 : ', forward_pin, '번, ', backward_pin, '번.')
 
     def go_forward(self):
-        self.gpio.output(self.forwardPin, self.gpio.LOW)
-        self.gpio.output(self.backwardPin, self.gpio.HIGH)
+        self.gpio.output(self.forwardPin, self.gpio.HIGH)
+        self.gpio.output(self.backwardPin, self.gpio.LOW)
 
     def go_backward(self):
-        self.gpio.output(self.backwardPin, self.gpio.LOW)
-        self.gpio.output(self.forwardPin, self.gpio.HIGH)
+        self.gpio.output(self.backwardPin, self.gpio.HIGH)
+        self.gpio.output(self.forwardPin, self.gpio.LOW)
 
     def stop(self):
         self.gpio.output(self.forwardPin, self.gpio.LOW)
@@ -36,22 +35,36 @@ class MotorControl:
         self.leftMotor.go_forward()
         self.rightMotor.go_forward()
 
+    def go_block(self):
+        self.leftMotor.go_forward()
+        self.rightMotor.go_forward()
+        time.sleep(0.4)
+        self.leftMotor.stop()
+        self.rightMotor.stop()
+
+    def go_block_back(self):
+        self.leftMotor.go_backward()
+        self.rightMotor.go_backward()
+        time.sleep(0.5)
+        self.rightMotor.stop()
+        self.leftMotor.stop()
+
     def go_back(self):
         self.leftMotor.go_backward()
         self.rightMotor.go_backward()
 
-    def turn_left(self):
+    def turn_right(self):
         self.rightMotor.go_backward()
         self.leftMotor.go_forward()
-        time.sleep(0.5)
+        time.sleep(0.55)
         self.rightMotor.stop()
         self.leftMotor.stop()
         time.sleep(0.2)
 
-    def turn_right(self):
+    def turn_left(self):
         self.rightMotor.go_forward()
         self.leftMotor.go_backward()
-        time.sleep(0.5)
+        time.sleep(0.4)
         self.rightMotor.stop()
         self.leftMotor.stop()
         time.sleep(0.2)

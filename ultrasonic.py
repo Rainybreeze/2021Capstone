@@ -9,19 +9,17 @@ class Ultrasonic(threading.Thread):
         self.echoPin = pin_echo
         self.gpio = gpio
         self.distance = 0
+        self.run_flag = True
         gpio.setup(self.trigPin, gpio.OUT, initial=gpio.LOW)
         gpio.setup(self.echoPin, gpio.IN)
         print('초음파 센서 설정됨, 트리거 : ', self.trigPin, ', 에코 : ', self.echoPin)
-
-    def run(self):
-        self.read_start()
 
     def get_distance(self):
         return self.distance
 
     def read_start(self):
-        while True:
-            global stop, start
+        while self.run_flag:
+            global start, stop
             self.gpio.output(self.trigPin, False)
             time.sleep(0.5)
 
@@ -39,4 +37,12 @@ class Ultrasonic(threading.Thread):
             distance = time_interval * 17000
             distance = round(distance, 2)
             self.distance = distance
-            print("값 : ", self.distance)
+            # print("값 : ", self.distance)
+
+    def run(self):
+        print("초음파 센서 스레드 실행됨")
+        self.read_start()
+
+    def stop(self):
+        self.run_flag = False
+
