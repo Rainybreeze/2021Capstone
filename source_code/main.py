@@ -52,8 +52,7 @@ def falling_block_turn():
         falling_block_turn()
 
 
-def detect_wall():
-    global is_left
+def detect_wall(is_left_inner):
     if infrad_sensor.get_data(MIDDLE_INFRAD_CHANNEL, True) > 1.4:
         motor_ctl.stop()
         time.sleep(0.5)
@@ -66,12 +65,12 @@ def detect_wall():
             falling_block_turn()
         elif left > 1.4:
             print('left wall detected', left)
-            is_left = False
+            is_left_inner = False
         elif right > 1.4:
             print('right wall detected', right)
-            is_left = True
+            is_left_inner = True
 
-        if is_left:
+        if is_left_inner:
             print('turn left')
             motor_ctl.turn_left()
             motor_ctl.go_block()
@@ -85,6 +84,8 @@ def detect_wall():
             motor_ctl.go_block()
             motor_ctl.turn_right()
             return True
+    else:
+        return is_left_inner
 
 
 def sys_exit():
@@ -101,14 +102,13 @@ def sys_exit():
 # main code
 running_flag = True
 isDebug = False
-idle_time = 0
 DEFAULT_IDLE_TIME = 43200
+idle_time = DEFAULT_IDLE_TIME
 LEFT_INFRAD_CHANNEL = 0
 MIDDLE_INFRAD_CHANNEL = 1
 RIGHT_INFRAD_CHANNEL = 2
 is_left = False
 
-idle_time = DEFAULT_IDLE_TIME
 
 for i in range(0, len(sys.argv)):
     if sys.argv[i] == '-debug':
@@ -177,7 +177,9 @@ try:
             time.sleep(1)
             motor_ctl.go_block()
             # detect_falling()
-            is_left = detect_wall()
+            print('작동 전 : ', is_left)
+            is_left = detect_wall(is_left_inner=is_left)
+            print('작동 후 : ', is_left)
             show_adc_data()
             show_ultrasonic_data()
         while not running_flag:
