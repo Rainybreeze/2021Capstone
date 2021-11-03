@@ -1,10 +1,13 @@
-import os, time, sys
+import os
 
-class roscore:
+
+class Roscore:
     def __init__(self):
+        os.fork()
         os.system('source ~/catkin_ws/devel/setup.bash')
         os.system('roscore')
 
-class roslidar:
+
+class Roslidar:
     def __init__(self):
         os.system('roslaunch ydlidar all_nodes.launch')

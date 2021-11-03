@@ -20,9 +20,9 @@ def show_ultrasonic_data():
 
 
 def show_adc_data():
-    print('left : %.3f' % infrad_sensor.get_data(0, True), end=', ')
-    print('mid : %.3f' % infrad_sensor.get_data(1, True), end=', ')
-    print('right : %.3f' % infrad_sensor.get_data(2, True))
+    print('left : %.3f' % infrad_sensor.get_data(LEFT_INFRAD_CHANNEL, True), end=', ')
+    print('mid : %.3f' % infrad_sensor.get_data(MIDDLE_INFRAD_CHANNEL, True), end=', ')
+    print('right : %.3f' % infrad_sensor.get_data(RIGHT_INFRAD_CHANNEL, True))
 
 
 def detect_falling():
@@ -35,13 +35,12 @@ def detect_falling():
 
 
 def falling_block_turn():
-    if infrad_sensor.get_data(0, True) > 1.4:
-        print('turn right')
+    if infrad_sensor.get_data(LEFT_INFRAD_CHANNEL, True) > 1.4:
         motor_ctl.turn_right()
         motor_ctl.go_block()
         motor_ctl.go_block()
         motor_ctl.turn_right()
-    elif infrad_sensor.get_data(0, True) > 1.4:
+    elif infrad_sensor.get_data(RIGHT_INFRAD_CHANNEL, True) > 1.4:
         motor_ctl.turn_left()
         motor_ctl.go_block()
         motor_ctl.go_block()
@@ -53,19 +52,23 @@ def falling_block_turn():
         falling_block_turn()
 
 
-def detect_wall(is_left):
-    if infrad_sensor.get_data(1, True) > 1.4:
+def detect_wall():
+    global is_left
+    if infrad_sensor.get_data(MIDDLE_INFRAD_CHANNEL, True) > 1.4:
         motor_ctl.stop()
         time.sleep(0.5)
-        left = infrad_sensor.get_data(0, True)
-        right = infrad_sensor.get_data(2, True)
-        print('front wall available', left, right)
+        left = infrad_sensor.get_data(LEFT_INFRAD_CHANNEL, True)
+        right = infrad_sensor.get_data(RIGHT_INFRAD_CHANNEL, True)
+        print('front wall detected', infrad_sensor.get_data(MIDDLE_INFRAD_CHANNEL, True))
 
         if left > 1.4 and right > 1.4:
+            print('return')
             falling_block_turn()
         elif left > 1.4:
+            print('left wall detected', left)
             is_left = False
         elif right > 1.4:
+            print('right wall detected', right)
             is_left = True
 
         if is_left:
@@ -100,26 +103,31 @@ running_flag = True
 isDebug = False
 idle_time = 0
 DEFAULT_IDLE_TIME = 43200
+LEFT_INFRAD_CHANNEL = 0
+MIDDLE_INFRAD_CHANNEL = 1
+RIGHT_INFRAD_CHANNEL = 2
+is_left = False
 
-len(sys.argv)
+idle_time = DEFAULT_IDLE_TIME
+
 for i in range(0, len(sys.argv)):
     if sys.argv[i] == '-debug':
         isDebug = True
         print('debug mode')
     if sys.argv[i] == '-setup-idle-time':
-        if sys.argv[i+1] == 'minutes':
+        if sys.argv[i + 1] == 'minutes':
             idle_time = (int(sys.argv[i + 2]) * 60)
-        elif sys.argv[i+1] == 'hours':
+        elif sys.argv[i + 1] == 'hours':
             idle_time = (int(sys.argv[i + 2]) * 60 * 60)
-
 
 if os.geteuid() != 0:
     exit("no root permission! plz run with 'sudo'.")
 
+os.system('source ~/catkin_ws/devel/setup.bash')
 os.system('chmod og+rwx /dev/gpio*')
 
-roscore = lidar.roscore()
-lidar_rviz = lidar.roslidar()
+roscore = lidar.Roscore()
+lidar_rviz = lidar.Roslidar()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -155,12 +163,10 @@ try:
             infrad_test.get_data()
             time.sleep(1)
 
-    is_left = False
     print('none debug mode')
     motor_ctl.vacc_motor_run()
     time.sleep(0.5)
     motor_ctl.vacc_motor_stop()
-    # motor_ctl.turn_left()
     motor_ctl.go_block()
     time.sleep(0.5)
     motor_ctl.go_block_back()
@@ -169,13 +175,11 @@ try:
         while running_flag:
             show_adc_data()
             time.sleep(1)
-            '''
             motor_ctl.go_block()
             # detect_falling()
-            is_left = detect_wall(is_left)
+            is_left = detect_wall()
             show_adc_data()
             show_ultrasonic_data()
-            '''
         while not running_flag:
             time.sleep(500)
 except KeyboardInterrupt:
