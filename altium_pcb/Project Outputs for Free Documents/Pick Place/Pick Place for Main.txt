@@ -1,0 +1,43 @@
+Altium Designer Pick and Place Locations
+C:\Users\Public\Documents\Altium\Projects\2021Capstone2\Project Outputs for Free Documents\Pick Place\Pick Place for Main.txt
+
+========================================================================================================================
+File Design Information:
+
+Date:       25-10-21
+Time:       08:23
+Revision:   Not in VersionControl
+Variant:    No variations
+Units used: mm
+
+Designator Comment                       Layer    Footprint              Center-X(mm) Center-Y(mm) Rotation Description                                                   
+U5         MCU-MCP3008-I/P(DIP16-7.62MM) TopLayer DIP16-2.54-19.2X7.62MM 73.2700      67.6900      180      "10 Bit Analog to Digital Converter 4, 8 Input 1 SAR 16-PDIP" 
+U4         L7812ABV                      TopLayer TO220ABN               90.0000      65.0000      90       "Precision 1A Regulator"                                      
+U3         L7812ABV                      TopLayer TO220ABN               100.0000     64.9600      90       "Precision 1A Regulator"                                      
+U2         L7805CP                       TopLayer ISOWATT220AB           109.5000     65.0000      90       "Positive Voltage Regulator"                                  
+U1         L7805CP                       TopLayer ISOWATT220AB           96.0000      77.0400      90       "Positive Voltage Regulator"                                  
+P5         "Header 6"                    TopLayer HDR1X6                 70.7700      60.5000      180      "Header, 6-Pin"                                               
+P4         "Header 8"                    TopLayer HDR1X8                 73.2700      75.0000      180      "Header, 8-Pin"                                               
+12V        5V                            TopLayer HDR1X3                 129.0000     55.5000      90       "Header, 3-Pin"                                               
+5V         12V                           TopLayer HDR1X3                 129.0000     78.5000      90       "Header, 3-Pin"                                               
+14V        14V                           TopLayer HDR1X3                 129.0000     66.5000      90       "Header, 3-Pin"                                               
+D4         "Diode 1N4004"                TopLayer DO-35                  121.5000     62.5000      180      "1 Amp General Purpose Rectifier"                             
+D3         "Diode 1N4004"                TopLayer DO-35                  121.5000     66.0000      180      "1 Amp General Purpose Rectifier"                             
+D2         "Diode 1N4004"                TopLayer DO-35                  121.5000     69.5000      180      "1 Amp General Purpose Rectifier"                             
+D1         "Diode 1N4004"                TopLayer DO-35                  121.5000     73.0000      180      "1 Amp General Purpose Rectifier"                             
+C16        Cap                           TopLayer RAD-0.2                115.0000     88.4600      90       Capacitor                                                     
+C15        Cap                           TopLayer RAD-0.2                110.5000     88.5000      90       Capacitor                                                     
+C14        Cap                           TopLayer RAD-0.2                102.5000     78.5000      90       Capacitor                                                     
+C13        Cap                           TopLayer RAD-0.2                124.0000     55.5000      270      Capacitor                                                     
+C12        "Cap Pol1"                    TopLayer RB5-10.5               67.0000      86.0000      270      "Polarized Capacitor (Radial)"                                
+C11        "Cap Pol1"                    TopLayer RB5-10.5               78.5000      89.0000      270      "Polarized Capacitor (Radial)"                                
+C10        "Cap Pol1"                    TopLayer RB5-10.5               90.0000      89.0000      270      "Polarized Capacitor (Radial)"                                
+C9         "Cap Pol1"                    TopLayer RB5-10.5               101.5000     89.0000      270      "Polarized Capacitor (Radial)"                                
+C8         Cap                           TopLayer RAD-0.2                122.0000     86.0000      180      Capacitor                                                     
+C7         Cap                           TopLayer RAD-0.2                122.0400     77.0000      180      Capacitor                                                     
+C6         Cap                           TopLayer RAD-0.2                87.0000      77.0000      90       Capacitor                                                     
+C5         Cap                           TopLayer RAD-0.2                111.5000     78.5000      90       Capacitor                                                     
+C4         Cap                           TopLayer RAD-0.2                122.0400     91.0000      180      Capacitor                                                     
+C3         Cap                           TopLayer RAD-0.2                122.0000     81.5000      180      Capacitor                                                     
+C2         Cap                           TopLayer RAD-0.2                77.5000      79.5000      360      Capacitor                                                     
+C1         Cap                           TopLayer RAD-0.2                107.0000     78.4600      90       Capacitor                                                     

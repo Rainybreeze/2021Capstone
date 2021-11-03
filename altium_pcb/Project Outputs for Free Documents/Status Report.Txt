@@ -1,0 +1,10 @@
+Output: Copy of Copy of Bill of Materials
+Type  : BOM
+From  : Variant [[No Variations]] of Schematic Document [Main_Circuit.SchDoc]
+   Generated File[Copy of Copy of Bill of Materials-Main_Circuit.xlsx]
+
+
+Files Generated   : 1
+Documents Printed : 0
+
+Finished Output Generation At ¿ÀÀü 8:24:03 On 2021-10-25
