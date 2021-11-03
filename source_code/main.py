@@ -27,7 +27,7 @@ def show_adc_data():
 
 def detect_falling():
     if ultrasonic_left.get_distance() >= 10 or ultrasonic_right.get_distance() >= 10:
-        print("fallen")
+        # print("fallen")
         motor_ctl.stop()
         motor_ctl.go_block_back()
         motor_ctl.go_block_back()
@@ -58,27 +58,27 @@ def detect_wall(is_left_inner):
         time.sleep(0.5)
         left = infrad_sensor.get_data(LEFT_INFRAD_CHANNEL, True)
         right = infrad_sensor.get_data(RIGHT_INFRAD_CHANNEL, True)
-        print('front wall detected', infrad_sensor.get_data(MIDDLE_INFRAD_CHANNEL, True))
+        # print('front wall detected', infrad_sensor.get_data(MIDDLE_INFRAD_CHANNEL, True))
 
         if left > 1.4 and right > 1.4:
-            print('return')
+            # print('return')
             falling_block_turn()
         elif left > 1.4:
-            print('left wall detected', left)
+            # print('left wall detected', left)
             is_left_inner = False
         elif right > 1.4:
-            print('right wall detected', right)
+            # print('right wall detected', right)
             is_left_inner = True
 
         if is_left_inner:
-            print('turn left')
+            # print('turn left')
             motor_ctl.turn_left()
             motor_ctl.go_block()
             motor_ctl.go_block()
             motor_ctl.turn_left()
             return False
         else:
-            print('turn right')
+            # print('turn right')
             motor_ctl.turn_right()
             motor_ctl.go_block()
             motor_ctl.go_block()
@@ -95,7 +95,7 @@ def sys_exit():
     ultrasonic_left.stop()
     infrad_sensor.stop()
     GPIO.cleanup()
-    print("종료합니다")
+    # print("종료합니다")
     sys.exit()
 
 
@@ -109,11 +109,10 @@ MIDDLE_INFRAD_CHANNEL = 1
 RIGHT_INFRAD_CHANNEL = 2
 is_left = False
 
-
 for i in range(0, len(sys.argv)):
     if sys.argv[i] == '-debug':
         isDebug = True
-        print('debug mode')
+        # print('debug mode')
     if sys.argv[i] == '-setup-idle-time':
         if sys.argv[i + 1] == 'minutes':
             idle_time = (int(sys.argv[i + 2]) * 60)
@@ -155,7 +154,7 @@ if isDebug:
     infrad_test = debugTest.InfradTest(GPIO, infrad_sensor)
 
 try:
-    print(idle_time)
+    # print(idle_time)
     if isDebug:
         while True:
             leftUltrasonic_test.get_data()
@@ -163,7 +162,7 @@ try:
             infrad_test.get_data()
             time.sleep(1)
 
-    print('none debug mode')
+    # print('none debug mode')
     motor_ctl.vacc_motor_run()
     time.sleep(0.5)
     motor_ctl.vacc_motor_stop()
@@ -176,10 +175,10 @@ try:
             show_adc_data()
             time.sleep(1)
             motor_ctl.go_block()
-            # detect_falling()
-            print('작동 전 : ', is_left)
+            detect_falling()
+            # print('작동 전 : ', is_left)
             is_left = detect_wall(is_left_inner=is_left)
-            print('작동 후 : ', is_left)
+            # print('작동 후 : ', is_left)
             show_adc_data()
             show_ultrasonic_data()
         while not running_flag:
