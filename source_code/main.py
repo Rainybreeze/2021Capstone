@@ -72,10 +72,16 @@ def sys_exit():
 # main code
 running_flag = True
 isDebug = False
+idle_time = 0
+
 for arg in sys.argv:
     if arg == '-debug':
         isDebug = True
         print('debug mode')
+    if arg == '-setup-idle-time':
+        idle_time = 0
+
+
 
 if os.geteuid() != 0:
     exit("no root permission! plz run with 'sudo'.")
@@ -106,6 +112,10 @@ infrad_sensor = infrad.Infrad()
 infrad_sensor.start()
 
 try:
+    if isDebug:
+        while True:
+            print('debug mode')
+            time.sleep(1)
     is_left = False
     # motor_ctl.vacc_motor_run()
     # motor_ctl.turn_left()
