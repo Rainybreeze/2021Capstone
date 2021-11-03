@@ -30,20 +30,44 @@ def detect_falling():
         print("fallen")
         motor_ctl.stop()
         motor_ctl.go_block_back()
+        motor_ctl.go_block_back()
+        falling_block_turn()
+
+
+def falling_block_turn():
+    if infrad_sensor.get_data(0, True) > 1.4:
+        print('turn right')
+        motor_ctl.turn_right()
+        motor_ctl.go_block()
+        motor_ctl.go_block()
+        motor_ctl.turn_right()
+    elif infrad_sensor.get_data(0, True) > 1.4:
+        motor_ctl.turn_left()
+        motor_ctl.go_block()
+        motor_ctl.go_block()
+        motor_ctl.turn_left()
+    else:
+        motor_ctl.stop()
+        motor_ctl.go_block_back()
+        motor_ctl.go_block_back()
+        falling_block_turn()
 
 
 def detect_wall(is_left):
-    if infrad_sensor.get_data(1, True) > 1.5:
+    if infrad_sensor.get_data(1, True) > 1.4:
         motor_ctl.stop()
         time.sleep(0.5)
         left = infrad_sensor.get_data(0, True)
         right = infrad_sensor.get_data(2, True)
         print('front wall available', left, right)
-        if left > 1.7:
+
+        if left > 1.4 and right > 1.4:
+            falling_block_turn()
+        elif left > 1.4:
             is_left = False
-        if right > 1.7:
-            if not is_left:
-                motor_ctl.go_block_back()
+        elif right > 1.4:
+            is_left = True
+
         if is_left:
             print('turn left')
             motor_ctl.turn_left()
@@ -75,6 +99,7 @@ def sys_exit():
 running_flag = True
 isDebug = False
 idle_time = 0
+DEFAULT_IDLE_TIME = 43200
 
 len(sys.argv)
 for i in range(0, len(sys.argv)):
@@ -82,15 +107,11 @@ for i in range(0, len(sys.argv)):
         isDebug = True
         print('debug mode')
     if sys.argv[i] == '-setup-idle-time':
-        idle_time = int(sys.argv[i + 1])
-'''        
-for arg in sys.argv:
-    if arg == '-debug':
-        isDebug = True
-        print('debug mode')
-    if arg == '-setup-idle-time':
-        idle_time = sys.argv[arg_num]
-        '''
+        if sys.argv[i+1] == 'minutes':
+            idle_time = (int(sys.argv[i + 2]) * 60)
+        elif sys.argv[i+1] == 'hours':
+            idle_time = (int(sys.argv[i + 2]) * 60 * 60)
+
 
 if os.geteuid() != 0:
     exit("no root permission! plz run with 'sudo'.")
@@ -109,7 +130,7 @@ vaccMotor_pin = [19, 16]
 
 motor_ctl = motor.MotorControl(leftMotor_pin, rightMotor_pin, vaccMotor_pin, GPIO)
 
-leftSonic_pin = [17, 18]
+leftSonic_pin = [18, 17]
 rightSonic_pin = [27, 22]
 
 ultrasonic_left = ultrasonic.Ultrasonic(leftSonic_pin[0], leftSonic_pin[1], GPIO)
@@ -136,8 +157,14 @@ try:
 
     is_left = False
     print('none debug mode')
-    # motor_ctl.vacc_motor_run()
+    motor_ctl.vacc_motor_run()
+    time.sleep(0.5)
+    motor_ctl.vacc_motor_stop()
     # motor_ctl.turn_left()
+    motor_ctl.go_block()
+    time.sleep(0.5)
+    motor_ctl.go_block_back()
+    time.sleep(0.5)
     while True:
         while running_flag:
             show_adc_data()
